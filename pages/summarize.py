@@ -13,7 +13,7 @@ st.set_page_config(page_title="DarkGPT", page_icon="random", layout="wide", init
 
 # Function to summarize text using BART model
 def summarize_text(input_text):
-    summarizer = pipeline("summarization")
+    summarizer = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
     summarized_text = summarizer(input_text, max_length=10050, min_length=50, do_sample=False)[0]['summary_text']
     return summarized_text
 
@@ -21,7 +21,7 @@ def summarize_text(input_text):
 # Function to analyze text and return metrics
 def analyze_text(input_text):
 
-    nltk.download('punkt')
+    nltk.download(['punkt', 'punkt_tab'])
     tokenized_words = word_tokenize(input_text)
     reading_time = readtime.of_text(input_text)
     text_complexity = textstat.flesch_reading_ease(input_text)
