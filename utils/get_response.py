@@ -1,33 +1,17 @@
-import g4f.cookies
 from g4f.client import Client
-import base64
 
-
-# Dictionary mapping model names to provider names
-model_provider_mapping = {
-    'gpt-3.5-turbo': 'DDG',
-    'gpt-4o': None,
-    'mixtral_8x7b': 'HuggingFace',
-    'blackbox': 'Blackbox',
-    'meta': 'MetaAI',
-    'llama3_70b_instruct': 'MetaAI',
-    # Add more models and providers as needed
-}
-
-# Dictionary mapping display model names to internal model names
+# Display model name -> g4f model id.
+# The provider is selected automatically by g4f (AnyProvider) for every model,
+# so no provider mapping is needed anymore.
 display_model_mapping = {
-    'gpt 3.5 turbo': 'gpt-3.5-turbo',
-    'gpt 4o': 'gpt-4o',
-    'llama 3': 'llama3_70b_instruct',
-    'Mixtral 70b': 'mixtral_8x7b',
-    'BlackBox': 'blackbox',
-    'Meta AI': 'meta',
+    'GPT-4o mini': 'gpt-4o-mini',
+    'GPT-4o': 'gpt-4o',
+    'Llama 3.3 70B': 'llama-3.3-70b',
+    'Mixtral 8x7B': 'mixtral-8x7b',
+    'Gemini 2.5 Flash': 'gemini-2.5-flash',
+    'DeepSeek V3': 'deepseek-v3',
+    'DeepSeek R1': 'deepseek-r1',
 }
-
-
-def get_provider(model: str) -> str:
-    """Get provider name based on the model."""
-    return model_provider_mapping.get(model, '')
 
 
 def get_model(display_model: str) -> str:
@@ -35,14 +19,16 @@ def get_model(display_model: str) -> str:
     return display_model_mapping.get(display_model, '')
 
 
+def get_provider(model: str):
+    """Provider is chosen automatically by g4f for every model."""
+    return None
+
+
 def get_bot_response(prompt, internal_model, provider_name):
-        client = Client()
-        response = client.chat.completions.create(
-            model=internal_model,
-            messages=[{"role": "user", "content": prompt}],
-            provider=provider_name,
-            cookies=g4f.cookies.get_cookies('bing')
-        )
-        return response.choices[0].message.content
-
-
+    client = Client()
+    response = client.chat.completions.create(
+        model=internal_model,
+        messages=[{"role": "user", "content": prompt}],
+        provider=provider_name,
+    )
+    return response.choices[0].message.content
